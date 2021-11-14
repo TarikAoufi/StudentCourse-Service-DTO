@@ -1,5 +1,5 @@
 # StudentCourse-Service-DTO
-Spring [ boot, data-jpa , web], Maven, Oracle, JDK8, Eclipse
+Spring [ boot, data-jpa , web], Maven, Oracle, JDK8, Spring Tool Suite 4
 
 
 
