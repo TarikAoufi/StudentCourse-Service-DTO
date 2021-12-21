@@ -18,7 +18,7 @@ import fr.tao.studentcourse.repository.CourseRepository;
 import fr.tao.studentcourse.repository.StudentRepository;
 import fr.tao.studentcourse.service.StudentService;
 
-@Service
+@Service 
 public class StudentServiceImpl implements StudentService {
 	
 	@Autowired
@@ -87,11 +87,14 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	private StudentDto mapEntityToDto(Student student) {
-		StudentDto studentDto = new StudentDto();
-		studentDto.setName(student.getName());
-		studentDto.setId(student.getId());
-		studentDto.setCourses(student.getCourses().stream().collect(Collectors.toSet()));
-		return studentDto;
+		if (student == null) {
+            return null;
+        }
+		return StudentDto.builder()
+				.name(student.getName())
+				.id(student.getId())
+				.courses(student.getCourses().stream().collect(Collectors.toSet()))
+				.build();
 	}
 
 }

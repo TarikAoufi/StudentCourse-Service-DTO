@@ -18,7 +18,7 @@ import fr.tao.studentcourse.service.CourseService;
 
 @Service
 public class CourseServiceImpl implements CourseService {
-	
+
 	@Autowired
 	private CourseRepository courseRepository;
 	@Autowired
@@ -46,7 +46,7 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public CourseDto updateCourse(Integer id, CourseDto courseDto) {
 		Optional<Course> course = courseRepository.findById(id);
-		if(course.isPresent()) {
+		if (course.isPresent()) {
 			course.get().getStudents().clear();
 			mapDtoToEntity(courseDto, course.get());
 			Course entity = courseRepository.save(course.get());
@@ -58,38 +58,41 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public String deleteCourse(Integer id) {
 		Optional<Course> course = courseRepository.findById(id);
-        //Remove the related courses from student entity.
-        if(course.isPresent()) {
-        	course.get().removeStudents();
-            courseRepository.deleteById(course.get().getId());
-            return "Course with id: " + id + " deleted successfully!";
-        }
+		// Remove the related courses from student entity.
+		if (course.isPresent()) {
+			course.get().removeStudents();
+			courseRepository.deleteById(course.get().getId());
+			return "Course with id: " + id + " deleted successfully!";
+		}
 		return null;
 	}
-	
+
 	private CourseDto mapEntityToDto(Course course) {
-		CourseDto courseDto = new CourseDto();
-		courseDto.setId(course.getId());
-		courseDto.setName(course.getName());
-		courseDto.setStudents(course.getStudents().stream().collect(Collectors.toSet()));
-		return courseDto;
+		if (course == null) {
+            return null;
+        }
+		return CourseDto.builder()
+				.id(course.getId())
+				.name(course.getName())
+				.students(course.getStudents().stream().collect(Collectors.toSet()))
+				.build();
 	}
-	
+
 	private void mapDtoToEntity(CourseDto courseDto, Course course) {
 		course.setName(courseDto.getName());
 		if (null == course.getStudents()) {
 			course.setStudents(new HashSet<>());
-        }
+		}
 		courseDto.getStudents().stream().forEach(studentInDto -> {
-            Student student = studentRepository.findByName(studentInDto.getName());
-            if (null == student) {
-            	student = new Student();
-            	student.setCourses(new HashSet<>());
-            }
-            student.setName(studentInDto.getName());
-            course.addStudent(student);
-        });		
-		
+			Student student = studentRepository.findByName(studentInDto.getName());
+			if (null == student) {
+				student = new Student();
+				student.setCourses(new HashSet<>());
+			}
+			student.setName(studentInDto.getName());
+			course.addStudent(student);
+		});
+
 	}
 
 }

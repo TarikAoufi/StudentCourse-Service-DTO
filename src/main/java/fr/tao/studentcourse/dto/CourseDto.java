@@ -1,18 +1,21 @@
 package fr.tao.studentcourse.dto;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import fr.tao.studentcourse.model.Student;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data 
+@Builder 
+@AllArgsConstructor
+@NoArgsConstructor
 public class CourseDto {
 	
 	private Integer id;
 	private String name;
-	private Set<Student> students = new HashSet<>();
+	private Set<Student> students;
 
 }
